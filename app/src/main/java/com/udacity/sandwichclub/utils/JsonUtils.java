@@ -54,12 +54,20 @@ public class JsonUtils {
             start = json.indexOf(':', position) + 2;
             end = json.indexOf('\"', start);
 
+            // ignore \" combinations in JSON text
+            while (end < json.length() && end > 0 && json.charAt(end - 1) == '\\') {
+                end = json.indexOf('\"', end + 1);
+            }
+
             // if value exists and is not empty continue
             if (end > start) {
                 if (!(start < 2 || start > json.length() || end > json.length())) {
 
                     // extract value
                     result = json.substring(start, end);
+
+                    // remove backslash from \"
+                    result = result.replace("\\\"", "\"");
                 }
             }
         }
