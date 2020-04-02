@@ -108,11 +108,12 @@ public class JsonUtils {
                     temp = json.substring(start, end);
 
                     // seperate values into an array of Strings
-                    String[] array = temp.split(",");
+                    String[] array = temp.split("\",");
 
                     // loop through values and remove quotes
                     for (String item : array) {
-                        temp = item.substring(1, item.length() - 1);
+                        //temp = item.substring(1, item.length() - 1);
+                        temp = item.replace("\"", "");
 
                         // Add values to list
                         result.add(temp);

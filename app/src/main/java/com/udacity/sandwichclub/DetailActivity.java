@@ -1,6 +1,7 @@
 package com.udacity.sandwichclub;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,7 +23,7 @@ public class DetailActivity extends AppCompatActivity {
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
 
-    // Declare member variables
+    // Declare variables for Views
     TextView akaLabelTextView;
     TextView akaTextView;
     TextView placeLabelTextView;
@@ -37,7 +38,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        // Set variables to thier Views
+        // Set variables to their Views
         ImageView ingredientsIv = findViewById(R.id.image_iv);
         akaLabelTextView = findViewById(R.id.also_known_label_tv);
         akaTextView = findViewById(R.id.also_known_tv);
@@ -65,9 +66,11 @@ public class DetailActivity extends AppCompatActivity {
 
         String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
         String json = sandwiches[position];
+
         Sandwich sandwich = JsonUtils.parseSandwichJson(json);
 
         populateUI(sandwich);
+
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
@@ -86,12 +89,15 @@ public class DetailActivity extends AppCompatActivity {
 
         // populate Also Known As
         if (sandwich.getAlsoKnownAs() == null) {
+            // hide Views if no data
             akaLabelTextView.setVisibility(View.GONE);
             akaTextView.setVisibility(View.GONE);
         }
         else {
+            // show Views if there is data
             akaLabelTextView.setVisibility(View.VISIBLE);
             akaTextView.setVisibility(View.VISIBLE);
+            // create text from List<String> and put in View
             boolean isFirst = true;
             for (String item : sandwich.getAlsoKnownAs()) {
                 if (isFirst) {
@@ -106,40 +112,49 @@ public class DetailActivity extends AppCompatActivity {
         // populate Place Of Origin
         temp = sandwich.getPlaceOfOrigin();
         if (temp.equals("")) {
+            // hide Views if no data
             placeLabelTextView.setVisibility(View.GONE);
             placeTextView.setVisibility(View.GONE);
         } else {
+            // show Views if there is data
             placeLabelTextView.setVisibility(View.VISIBLE);
             placeTextView.setVisibility(View.VISIBLE);
+            // put text in View
             placeTextView.setText(sandwich.getPlaceOfOrigin());
         }
 
         // populate Description
         temp = sandwich.getDescription();
         if (temp.equals("")) {
+            // hide Views if no data
             descriptionLabelTextView.setVisibility(View.GONE);
             descriptionTextView.setVisibility(View.GONE);
         } else {
+            // show Views if there is data
             descriptionLabelTextView.setVisibility(View.VISIBLE);
             descriptionTextView.setVisibility(View.VISIBLE);
+            // put text in View
             descriptionTextView.setText(sandwich.getDescription());
         }
 
         // populate Ingredients
         if (sandwich.getIngredients() == null) {
+            // hide Views if no data
             ingredientsLabelTextView.setVisibility(View.GONE);
             ingredientsTextView.setVisibility(View.GONE);
         }
         else {
+            // show Views if there is data
             ingredientsLabelTextView.setVisibility(View.VISIBLE);
             ingredientsTextView.setVisibility(View.VISIBLE);
+            // create text from List<String> and put in View
             boolean isFirst = true;
             for (String item : sandwich.getIngredients()) {
                 if (isFirst) {
-                    ingredientsTextView.setText(item);
+                    ingredientsTextView.setText(String.format("- %s", item));
                     isFirst = false;
                 } else {
-                    ingredientsTextView.append("\n" + item);
+                    ingredientsTextView.append("\n" + String.format("- %s", item));
                 }
             }
         }
